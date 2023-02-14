@@ -217,7 +217,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_barang.php" class="nav-link active">
+                            <a href="data_barang.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Barang
@@ -225,8 +225,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="barang_keluar.php" class="nav-link">
-                            <i class="nav-icon bx bx-exit" style="top: 7px;position: relative;font-size:25px"></i>
+                            <a href="barang_keluar.php" class="nav-link  active">
+                            <i class="nav-icon bx bx-exit" style="top: 2px;position: relative;font-size:25px"></i>
                             <p>
                                 Pengluaran Barang
                             </p>
@@ -271,21 +271,22 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="document.getElementById('add-data-barang').style.display='block'">Add Data User</button>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-data-keluar').style.display='block'">Add Data Pengeluaran</button>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>Kode Barang</th>
                                     <th>Nama Barang</th>
-                                    <th>Tanggal Dibeli</th>
-                                    <th>Stok</th>
+                                    <th>Nama Penerima</th>
+                                    <th>Tanggal Keluar</th>
+                                    <th>Jumlah Keluar</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
-                                    $query = $conn->query("select * from barang ");
+                                    $query = $conn->query("select * from keluar inner join barang on keluar.kode_barang=barang.kode_barang");
                                     while($data = $query->fetch_array()){ 
                                 ?>
                                     <tr>
@@ -296,13 +297,16 @@
                                             <?= $data['nama_barang']?>
                                         </td>
                                         <td>
-                                            <?= $data['tanggal_dibeli']?>
+                                            <?= $data['penerima']?>
                                         </td>
                                         <td>
-                                            <?= $data['stok']?>
+                                            <?= $data['tanggal_keluar']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
+                                            <?= $data['jumlah_keluar']?>
+                                        </td>
+                                        <td>
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -312,25 +316,26 @@
                     <!-- /.card-body -->
                     <!-- modal edit user -->
                         <?php
-                            @$kode = $_POST['kode'];
+                            @$id = $_POST['id'];   
                             @$kode_barang = $_POST['kode_barang'];
                             @$nama_barang = $_POST['nama_barang'];
-                            @$tanggal_dibeli = $_POST['tanggal_dibeli'];
-                            @$stok = $_POST['stok'];
+                            @$penerima = $_POST['penerima'];
+                            @$tanggal_keluar = $_POST['tanggal_keluar'];
+                            @$jumlah_keluar = $_POST['jumlah_keluar'];
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok' where kode_barang='$kode'");
+                                $edit = $conn->query("update user set nama_barang='$nama_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar' where id='$id'");
                                 if($edit){
                                     echo 'berhasi;';
                                 }
                             }
-                            $query = $conn->query("select * from barang");
+                            $query = $conn->query("select * from user");
                             while($data = $query->fetch_array()){
                         ?>
-                        <div class="modal fade" id="modal-<?= $data['kode_barang']?>">
+                        <div class="modal fade" id="modal-<?= $data['id']?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Data Barang</h4>
+                                        <h4 class="modal-title">Edit Data User</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -338,22 +343,26 @@
                                     <div class="modal-body">
                                     <form action="" method="post">
                                             <div class="modal-body p-0">
-                                                <input type="hidden" name="kode" value="<?= $data['kode_barang']?>">
+                                                <input type="hidden" name="id" value="<?= $data['id']?>">
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Kode Barang</label>
-                                                    <input type="text" class="form-control" name="kode_barang" require value="<?= $data['kode_barang']?>">
+                                                    <input type="text" class="form-control" value="<?= $data['kode_barang']?>" name="kode_barang">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nama Barang</label>
-                                                    <input type="text" class="form-control" name="nama_barang"  require value="<?= $data['nama_barang']?>">
+                                                    <input type="text" class="form-control" value="<?= $data['nama_barang']?>" name="nama_barang">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Tanggal Dibeli</label>
-                                                    <input type="date" class="form-control"  name="tanggal_dibeli" value="<?= $data['tanggal_dibeli']?>"  require >
+                                                    <label for="exampleFormControlInput1">Nama Penerima</label>
+                                                    <input type="text" class="form-control" value="<?= $data['penerima']?>" name="penerima">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Stok</label>
-                                                    <input type="number" name="stok" class="form-control" require value="<?= $data['stok']?>">
+                                                    <label for="exampleFormControlInput1">Tanggal Keluar</label>
+                                                    <select name="tanggal_keluar" id="" class="form-control">
+                                                        <option value="<?= $data['tanggal_keluar'] ?>" selected><?= $data['tanggal_keluar'] ?></option>
+                                                        <option value="admin">Admin</option>
+                                                        <option value="petugas">Petugas</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -372,48 +381,60 @@
                     <!-- modal add user -->
                     <?php
                     @$kode_barang = $_POST['kode_barang'];
-                    @$nama_barang = $_POST['nama_barang'];
-                    @$tanggal_dibeli = $_POST['tanggal_dibeli'];
-                    @$stok = $_POST['stok'];
+                    @$penerima = $_POST['penerima'];
+                    @$tanggal_keluar = $_POST['tanggal_keluar'];
+                    @$jumlah_keluar = $_POST['jumlah_keluar'];
                     if(isset($_POST['add'])){
-                        $query2 = $conn->query("insert into barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok'");
+                        $query2 = $conn->query("insert into keluar set kode_barang='$kode_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar', jumlah_keluar='$jumlah_keluar'");
                         if($query2){
+                            $get = $conn->query("select * from barang where kode_barang='$kode_barang'");
+                            $data = $get->fetch_array();
+                            $test = $data['stok'] - $jumlah_keluar;
+                            $update = $conn->query("update barang set stok='$test' where kode_barang='$kode_barang'");
                             echo "
                             <script language = javascript>
-                                    window.location.href='data_barang.php';
+                                    window.location.href='barang_keluar.php';
                             </script>
                           ";
                         }
                     }
                     ?>
-                    <div class="modal P-0" id="add-data-barang" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
+                    <div class="modal P-0" id="add-data-keluar" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
                         <div class="modal-dialog">
                             <div class="modal-content" style="width:1">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data User</h5>
-                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-barang').style.display='none'"></button>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data Pengeluaran Barang</h5>
+                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-keluar').style.display='none'"></button>
                                 </div>
                                 <form action="" method="post">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Kode Barang</label>
-                                            <input type="text" class="form-control" name="kode_barang" require>
-                                        </div>
-                                        <div class="form-group">
                                             <label for="exampleFormControlInput1">Nama Barang</label>
-                                            <input type="text" class="form-control" name="nama_barang"  require>
+                                            <select name="kode_barang" id="" class="form-control">
+                                                <option value="">Pilih Barang</option>
+                                                <?php
+                                                    $query = $conn->query("select * from barang"); 
+                                                    while($data=$query->fetch_array()){
+                                                ?>
+                                                <option value="<?= $data['kode_barang']?>"><?= $data['nama_barang']?></option>
+                                                <?php } ?>
+                                            </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Tanggal Dibeli</label>
-                                            <input type="date" class="form-control"  name="tanggal_dibeli"  require>
+                                            <label for="exampleFormControlInput1">Nama Penerima</label>
+                                            <input type="text" class="form-control"  name="penerima"  require>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Stok</label>
-                                            <input type="number" name="stok" class="form-control" require>
+                                            <label for="exampleFormControlInput1">Tanggal Keluar</label>
+                                            <input type="date" class="form-control"  name="tanggal_keluar"  require>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">Jumlah Keluar</label>
+                                            <input type="number" class="form-control"  name="jumlah_keluar"  require>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-barang').style.display='none'">Close</button>
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-keluar').style.display='none'">Close</button>
                                         <button type="submit" class="btn btn-primary" name="add">Add Data</button>
                                     </div>
                                 </form>

@@ -224,6 +224,14 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="barang_keluar.php" class="nav-link">
+                            <i class="nav-icon bx bx-exit" style="top: 7px;position: relative;font-size:25px"></i>
+                            <p>
+                                Pengluaran Barang
+                            </p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
