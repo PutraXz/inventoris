@@ -217,6 +217,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="ruang.php" class="nav-link">
+                            <i class="nav-icon bx bx-home-alt-2" style="top: 2px;position: relative;font-size:25px"></i>
+                            <p>
+                                Ruangan
+                            </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="data_barang.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -275,9 +283,10 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Kode Barang</th>
                                     <th>Nama Barang</th>
                                     <th>Nama Penerima</th>
+                                    <th>Nama Ruangan</th>
+                                    <th>Nama Penanggung</th>
                                     <th>Tanggal Keluar</th>
                                     <th>Jumlah Keluar</th>
                                     <th>Aksi</th>
@@ -286,18 +295,21 @@
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
-                                    $query = $conn->query("select * from keluar inner join barang on keluar.kode_barang=barang.kode_barang");
+                                    $query = $conn->query("select * from keluar inner join barang on keluar.kode_barang=barang.kode_barang inner join ruangan on ruangan.id=keluar.id_ruangan");
                                     while($data = $query->fetch_array()){ 
                                 ?>
                                     <tr>
-                                        <td>
-                                            <?= $data['kode_barang']?>
-                                        </td>
                                         <td>
                                             <?= $data['nama_barang']?>
                                         </td>
                                         <td>
                                             <?= $data['penerima']?>
+                                        </td>
+                                        <td>
+                                            <?= $data['nama_ruangan']?>
+                                        </td>
+                                        <td>
+                                            <?= $data['nama_penanggung']?>
                                         </td>
                                         <td>
                                             <?= $data['tanggal_keluar']?>
@@ -306,7 +318,7 @@
                                             <?= $data['jumlah_keluar']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -323,15 +335,15 @@
                             @$tanggal_keluar = $_POST['tanggal_keluar'];
                             @$jumlah_keluar = $_POST['jumlah_keluar'];
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update user set nama_barang='$nama_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar' where id='$id'");
+                                $edit = $conn->query("update keluar set kode_barang='$kode_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar' where id='$id'");
                                 if($edit){
                                     echo 'berhasi;';
                                 }
                             }
-                            $query = $conn->query("select * from user");
+                            $query = $conn->query("select * from keluar inner join barang on keluar.kode_barang=barang.kode_barang");
                             while($data = $query->fetch_array()){
                         ?>
-                        <div class="modal fade" id="modal-<?= $data['id']?>">
+                        <div class="modal fade" id="modal-<?= $data['kode_barang']?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -345,8 +357,7 @@
                                             <div class="modal-body p-0">
                                                 <input type="hidden" name="id" value="<?= $data['id']?>">
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Kode Barang</label>
-                                                    <input type="text" class="form-control" value="<?= $data['kode_barang']?>" name="kode_barang">
+                                                    <input type="hidden" class="form-control" value="<?= $data['kode_barang']?>" name="kode_barang">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nama Barang</label>
@@ -380,12 +391,13 @@
                     <!-- /modal edit user -->
                     <!-- modal add user -->
                     <?php
+                    @$id_ruangan = $_POST['id_ruangan'];
                     @$kode_barang = $_POST['kode_barang'];
                     @$penerima = $_POST['penerima'];
                     @$tanggal_keluar = $_POST['tanggal_keluar'];
                     @$jumlah_keluar = $_POST['jumlah_keluar'];
                     if(isset($_POST['add'])){
-                        $query2 = $conn->query("insert into keluar set kode_barang='$kode_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar', jumlah_keluar='$jumlah_keluar'");
+                        $query2 = $conn->query("insert into keluar set kode_barang='$kode_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar', jumlah_keluar='$jumlah_keluar', id_ruangan='$id_ruangan'");
                         if($query2){
                             $get = $conn->query("select * from barang where kode_barang='$kode_barang'");
                             $data = $get->fetch_array();
@@ -417,6 +429,16 @@
                                                     while($data=$query->fetch_array()){
                                                 ?>
                                                 <option value="<?= $data['kode_barang']?>"><?= $data['nama_barang']?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <label for="exampleFormControlInput1">Nama Ruangan</label>
+                                            <select name="id_ruangan" id="" class="form-control">
+                                                <option value="">Pilih Ruangan</option>
+                                                <?php
+                                                    $query = $conn->query("select * from ruangan"); 
+                                                    while($data=$query->fetch_array()){
+                                                ?>
+                                                <option value="<?= $data['id']?>"><?= $data['nama_ruangan']?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>

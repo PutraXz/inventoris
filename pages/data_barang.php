@@ -217,6 +217,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="ruang.php" class="nav-link">
+                            <i class="nav-icon bx bx-home-alt-2" style="top: 2px;position: relative;font-size:25px"></i>
+                            <p>
+                                Ruangan
+                            </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="data_barang.php" class="nav-link active">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>

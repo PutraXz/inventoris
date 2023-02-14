@@ -209,7 +209,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_user.php" class="nav-link active">
+                            <a href="data_user.php" class="nav-link">
                                 <i class="nav-icon bx bxs-user" style="top: 2px;position: relative;"></i>
                                 <p>
                                     User
@@ -217,7 +217,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="ruang.php" class="nav-link">
+                            <a href="ruang.php" class="nav-link  active">
                             <i class="nav-icon bx bx-home-alt-2" style="top: 2px;position: relative;font-size:25px"></i>
                             <p>
                                 Ruangan
@@ -279,35 +279,27 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="document.getElementById('add-data-siswa').style.display='block'">Add Data User</button>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-data-siswa').style.display='block'">Add Data Ruangan</button>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Nama User</th>
-                                    <th>Level</th>
+                                    <th>Nama Ruangan</th>
+                                    <th>Nama Penanggung</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
-                                    $query = $conn->query("select * from user");
+                                    $query = $conn->query("select * from ruangan");
                                     while($data = $query->fetch_array()){ 
                                 ?>
                                     <tr>
                                         <td>
-                                            <?= $data['username']?>
+                                            <?= $data['nama_ruangan']?>
                                         </td>
                                         <td>
-                                            <?= $data['password']?>
-                                        </td>
-                                        <td>
-                                            <?= $data['nama_user']?>
-                                        </td>
-                                        <td>
-                                            <?= $data['level']?>
+                                            <?= $data['nama_penanggung']?>
                                         </td>
                                         <td>
                                         <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
@@ -321,24 +313,22 @@
                     <!-- modal edit user -->
                         <?php
                             @$id = $_POST['id'];   
-                            @$username = $_POST['username'];
-                            @$password = $_POST['password'];
-                            @$nama_user = $_POST['nama_user'];
-                            @$level = $_POST['level'];
+                            @$nama_ruangan = $_POST['nama_ruangan'];
+                            @$nama_penanggung = $_POST['nama_penanggung'];
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update user set username='$username',password='$password',nama_user='$nama_user',level='$level' where id='$id'");
+                                $edit = $conn->query("update ruangan set nama_ruangan='$nama_ruangan',nama_penanggung='$nama_penanggung' where id='$id'");
                                 if($edit){
                                     echo 'berhasi;';
                                 }
                             }
-                            $query = $conn->query("select * from user");
+                            $query = $conn->query("select * from ruangan");
                             while($data = $query->fetch_array()){
                         ?>
                         <div class="modal fade" id="modal-<?= $data['id']?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Data User</h4>
+                                        <h4 class="modal-title">Edit Data Ruangan</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -348,24 +338,12 @@
                                             <div class="modal-body p-0">
                                                 <input type="hidden" name="id" value="<?= $data['id']?>">
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Username</label>
-                                                    <input type="text" class="form-control" value="<?= $data['username']?>" name="username">
+                                                    <label for="exampleFormControlInput1">Nama Ruangan</label>
+                                                    <input type="text" class="form-control" value="<?= $data['nama_ruangan']?>" name="nama_ruangan">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Password</label>
-                                                    <input type="text" class="form-control" value="<?= $data['password']?>" name="password">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Nama Petugas</label>
-                                                    <input type="text" class="form-control" value="<?= $data['nama_user']?>" name="nama_user">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Level</label>
-                                                    <select name="level" id="" class="form-control">
-                                                        <option value="<?= $data['level'] ?>" selected><?= $data['level'] ?></option>
-                                                        <option value="admin">Admin</option>
-                                                        <option value="petugas">Petugas</option>
-                                                    </select>
+                                                    <label for="exampleFormControlInput1">Nama Penanggung</label>
+                                                    <input type="text" class="form-control" value="<?= $data['nama_penanggung']?>" name="nama_penanggung">
                                                 </div>
                                             </div>
                                         </div>
@@ -383,16 +361,14 @@
                     <!-- /modal edit user -->
                     <!-- modal add user -->
                     <?php
-                    @$username = $_POST['username'];
-                    @$password = $_POST['password'];
-                    @$nama_user = $_POST['nama_user'];
-                    @$level = $_POST['level'];
+                    @$nama_ruangan = $_POST['nama_ruangan'];
+                    @$nama_penanggung = $_POST['nama_penanggung'];
                     if(isset($_POST['add'])){
-                        $query2 = $conn->query("insert into user set username='$username',password='$password',nama_user='$nama_user',level='$level'");
+                        $query2 = $conn->query("insert into ruangan set nama_ruangan='$nama_ruangan',nama_penanggung='$nama_penanggung'");
                         if($query2){
                             echo "
                             <script language = javascript>
-                                    window.location.href='data_user.php';
+                                    window.location.href='ruangan.php';
                             </script>
                           ";
                         }
@@ -408,23 +384,12 @@
                                 <form action="" method="post">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Username</label>
-                                            <input type="text" class="form-control" name="username" require>
+                                            <label for="exampleFormControlInput1">Nama Ruangan</label>
+                                            <input type="text" class="form-control" name="nama_ruangan" require>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Password</label>
-                                            <input type="text" class="form-control" name="password"  require>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Nama Petugas</label>
-                                            <input type="text" class="form-control"  name="nama_user"  require>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Nama Petugas</label>
-                                            <select name="level" id="" class="form-control">
-                                                <option value="admin">Admin</option>
-                                                <option value="petugas">Petugas</option>
-                                            </select>
+                                            <label for="exampleFormControlInput1">Nama Penanggung</label>
+                                            <input type="text" class="form-control" name="nama_penanggung"  require>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
