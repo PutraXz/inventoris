@@ -228,6 +228,14 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="data_kategori.php" class="nav-link">
+                            <i class="nav-icon bx bx-category" style="top: 2px;position: relative;font-size:25px"></i>
+                            <p>
+                                Kategori
+                            </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="data_barang.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -369,7 +377,7 @@ session_start();
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Data User</h4>
+                                        <h4 class="modal-title">Edit Data Pengeluaran Barang</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>

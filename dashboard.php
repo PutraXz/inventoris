@@ -16,6 +16,7 @@ session_start();
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
@@ -227,6 +228,14 @@ session_start();
               </a>
           </li>
           <li class="nav-item">
+              <a href="pages/data_kategori.php" class="nav-link">
+              <i class="nav-icon bx bx-category" style="top: 2px;position: relative;font-size:25px"></i>
+              <p>
+                  Kategori
+              </p>
+              </a>
+          </li>
+          <li class="nav-item">
             <a href="pages/data_barang.php" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -271,7 +280,9 @@ session_start();
 
     <!-- Main content -->
     <section class="content">
-
+    <button type="button" class="btn btn-success swalDefaultSuccess">
+                  Launch Success Toast
+                </button>
     </section>
     <!-- /.content -->
   </div>
@@ -305,18 +316,11 @@ session_start();
 <script src="dist/js/adminlte.js"></script>
 
 <!-- PAGE PLUGINS -->
-<!-- jQuery Mapael -->
-<script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-<script src="plugins/raphael/raphael.min.js"></script>
-<script src="plugins/jquery-mapael/jquery.mapael.min.js"></script>
-<script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
-<!-- ChartJS -->
+<script src="plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="plugins/chart.js/Chart.min.js"></script>
-
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard2.js"></script>
+
 </body>
 </html>
 <?php

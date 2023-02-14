@@ -228,6 +228,14 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="data_kategori.php" class="nav-link">
+                            <i class="nav-icon bx bx-category" style="top: 2px;position: relative;font-size:25px"></i>
+                            <p>
+                                Kategori
+                            </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="data_barang.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -282,7 +290,7 @@ session_start();
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="document.getElementById('add-data-siswa').style.display='block'">Add Data Ruangan</button>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-data-ruang').style.display='block'">Add Data Ruangan</button>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -397,12 +405,12 @@ session_start();
                         }
                     }
                     ?>
-                    <div class="modal P-0" id="add-data-siswa" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
+                    <div class="modal P-0" id="add-data-ruang" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
                         <div class="modal-dialog">
                             <div class="modal-content" style="width:1">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data User</h5>
-                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-siswa').style.display='none'"></button>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data Ruangan</h5>
+                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-ruang').style.display='none'"></button>
                                 </div>
                                 <form action="" method="post">
                                     <div class="modal-body">
@@ -416,7 +424,7 @@ session_start();
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-siswa').style.display='none'">Close</button>
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-ruang').style.display='none'">Close</button>
                                         <button type="submit" class="btn btn-primary" name="add">Add Data</button>
                                     </div>
                                 </form>

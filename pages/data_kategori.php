@@ -11,7 +11,7 @@ session_start();
     <title>AdminLTE 3 | Widgets</title>
 
     <!-- bootstrap -->
-    <link rel="stylesheet" href="../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -213,7 +213,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_user.php" class="nav-link active">
+                            <a href="data_user.php" class="nav-link">
                                 <i class="nav-icon bx bxs-user" style="top: 2px;position: relative;"></i>
                                 <p>
                                     User
@@ -229,7 +229,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_kategori.php" class="nav-link">
+                            <a href="data_kategori.php" class="nav-link active">
                             <i class="nav-icon bx bx-category" style="top: 2px;position: relative;font-size:25px"></i>
                             <p>
                                 Kategori
@@ -245,10 +245,10 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="barang_keluar.php" class="nav-link">
+                            <a href="kategori_keluar.php" class="nav-link">
                             <i class="nav-icon bx bx-exit" style="top: 7px;position: relative;font-size:25px"></i>
                             <p>
-                                Pengluaran Barang
+                                Pengluaran kategori
                             </p>
                             </a>
                         </li>
@@ -291,14 +291,11 @@ session_start();
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="document.getElementById('add-data-user').style.display='block'">Add Data User</button>
+                        <a href="#" class="btn btn-primary" onclick="document.getElementById('add-data-kategori').style.display='block'">Add Data Kategori</a>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Nama User</th>
-                                    <th>Level</th>
+                                    <th>Nama Kategori</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -308,35 +305,27 @@ session_start();
                                     $page = @$_GET['page'];
                                     if($page=='hapus'){
                                         $id = $_GET['id'];
-                                        $del = $conn->query("delete from user where id='$id'");
+                                        $del = $conn->query("delete from kategori where id_kategori='$id'");
                                         if($del){
                                             echo "
                                             <script>
+                                            
                                             alert('Hapus Data Berhasil');
-                                            window.location.href='data_user.php';
+                                            window.location.href='data_kategori.php';
                                             </script>
                                             ";
                                         }
                                     };
-                                    $query = $conn->query("select * from user");
+                                    $query = $conn->query("select * from kategori ");
                                     while($data = $query->fetch_array()){ 
                                 ?>
                                     <tr>
                                         <td>
-                                            <?= $data['username']?>
+                                            <?= $data['nama_kategori']?>
                                         </td>
                                         <td>
-                                            <?= $data['password']?>
-                                        </td>
-                                        <td>
-                                            <?= $data['nama_user']?>
-                                        </td>
-                                        <td>
-                                            <?= $data['level']?>
-                                        </td>
-                                        <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
-                                        <a href="data_user.php?page=hapus&id=<?= $data['id']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id_kategori']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
+                                        <a href="data_kategori.php?page=hapus&id=<?= $data['id_kategori']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -346,30 +335,27 @@ session_start();
                     <!-- /.card-body -->
                     <!-- modal edit user -->
                         <?php
-                            @$id = $_POST['id'];   
-                            @$username = $_POST['username'];
-                            @$password = $_POST['password'];
-                            @$nama_user = $_POST['nama_user'];
-                            @$level = $_POST['level'];
+                            @$id_kategori = $_POST['id_kategori'];
+                            @$nama_kategori = $_POST['nama_kategori'];
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update user set username='$username',password='$password',nama_user='$nama_user',level='$level' where id='$id'");
+                                $edit = $conn->query("update kategori set nama_kategori='$nama_kategori' where id_kategori='$id_kategori'");
                                 if($edit){
-                                   echo "
-                                   <script language = javascript>
+                                    echo "
+                                    <script language = javascript>
                                         alert('Data Berhasil Diubah');
-                                            window.location.href='ruangan.php';
+                                            window.location.href='data_kategori.php';
                                     </script>
-                                   ";
+                                    ";
                                 }
                             }
-                            $query = $conn->query("select * from user");
+                            $query = $conn->query("select * from kategori");
                             while($data = $query->fetch_array()){
                         ?>
-                        <div class="modal fade" id="modal-<?= $data['id']?>">
+                        <div class="modal fade" id="modal-<?= $data['id_kategori']?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Data User</h4>
+                                        <h4 class="modal-title">Edit Data kategori</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -377,26 +363,10 @@ session_start();
                                     <div class="modal-body">
                                     <form action="" method="post">
                                             <div class="modal-body p-0">
-                                                <input type="hidden" name="id" value="<?= $data['id']?>">
+                                                <input type="hidden" name="id_kategori" value="<?= $data['id_kategori']?>">
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Username</label>
-                                                    <input type="text" class="form-control" value="<?= $data['username']?>" name="username">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Password</label>
-                                                    <input type="text" class="form-control" value="<?= $data['password']?>" name="password">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Nama Petugas</label>
-                                                    <input type="text" class="form-control" value="<?= $data['nama_user']?>" name="nama_user">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Level</label>
-                                                    <select name="level" id="" class="form-control">
-                                                        <option value="<?= $data['level'] ?>" selected><?= $data['level'] ?></option>
-                                                        <option value="admin">Admin</option>
-                                                        <option value="petugas">Petugas</option>
-                                                    </select>
+                                                    <label for="exampleFormControlInput1">Nama kategori</label>
+                                                    <input type="text" class="form-control" name="nama_kategori"  require value="<?= $data['nama_kategori']?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -414,53 +384,37 @@ session_start();
                     <!-- /modal edit user -->
                     <!-- modal add user -->
                     <?php
-                    @$username = $_POST['username'];
-                    @$password = $_POST['password'];
-                    @$nama_user = $_POST['nama_user'];
-                    @$level = $_POST['level'];
+                    @$nama_kategori = $_POST['nama_kategori'];
                     if(isset($_POST['add'])){
-                        $query2 = $conn->query("insert into user set username='$username',password='$password',nama_user='$nama_user',level='$level'");
-                        if($query2){
+                        $add = $conn->query("insert into kategori set nama_kategori='$nama_kategori'");
+                        if($add){
                             echo "
                             <script language = javascript>
-                                alert('Data Berhasil Ditambahkan');
-                                    window.location.href='data_user.php';
-                            </script>
-                          ";
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Your work has been saved',
+                                showConfirmButton: false,
+                            });
+                          </script>
+                            ";
                         }
                     }
                     ?>
-                    <div class="modal P-0" id="add-data-user" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
+                    <div class="modal P-0" id="add-data-kategori" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
                         <div class="modal-dialog">
                             <div class="modal-content" style="width:1">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data User</h5>
-                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-user').style.display='none'"></button>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data Kategori</h5>
+                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-kategori').style.display='none'"></button>
                                 </div>
                                 <form action="" method="post">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Username</label>
-                                            <input type="text" class="form-control" name="username" require>
+                                            <label for="exampleFormControlInput1">Nama kategori</label>
+                                            <input type="text" class="form-control" name="nama_kategori"  require>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Password</label>
-                                            <input type="text" class="form-control" name="password"  require>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Nama Petugas</label>
-                                            <input type="text" class="form-control"  name="nama_user"  require>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Nama Petugas</label>
-                                            <select name="level" id="" class="form-control">
-                                                <option value="admin">Admin</option>
-                                                <option value="petugas">Petugas</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-user').style.display='none'">Close</button>
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-kategori').style.display='none'">Close</button>
                                         <button type="submit" class="btn btn-primary" name="add">Add Data</button>
                                     </div>
                                 </form>
@@ -488,6 +442,7 @@ session_start();
             </div>
         </footer>
     </div>
+    <!-- jangan lupa untuk menambahkan unset agar sweet alert tidak muncul lagi saat di refresh -->
     <!-- jQuery -->
     <script src="../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
@@ -499,15 +454,7 @@ session_start();
     <script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="../plugins/jszip/jszip.min.js"></script>
-    <script src="../plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="../plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="../dist/js/adminlte.min.js"></script>
-        <!-- SweetAlert2 -->
-    <script src="../plugins/sweetalert2/sweetalert2.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="../dist/js/demo.js"></script>
 

@@ -229,6 +229,14 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="data_kategori.php" class="nav-link">
+                            <i class="nav-icon bx bx-category" style="top: 2px;position: relative;font-size:25px"></i>
+                            <p>
+                                Kategori
+                            </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="data_barang.php" class="nav-link active">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -283,7 +291,7 @@ session_start();
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="document.getElementById('add-data-barang').style.display='block'">Add Data User</button>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-data-barang').style.display='block'">Add Data Barang</button>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -291,6 +299,8 @@ session_start();
                                     <th>Nama Barang</th>
                                     <th>Tanggal Dibeli</th>
                                     <th>Stok</th>
+                                    <th>Gambar</th>
+                                    <th>Merk</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -326,9 +336,14 @@ session_start();
                                         <td>
                                             <?= $data['stok']?>
                                         </td>
+                                        <td class="p-0" style="background-image:url('foto_barang/<?= $data['gambar']?>'); background-size:cover;background-position: center center;">
+                                        </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
-                                        <a href="data_barang.php?page=hapus&kode_barang=<?= $data['kode_barang']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
+                                            <?= $data['merk']?>
+                                        </td>
+                                        <td>
+                                        <button type="button" class="btn btn-primary btn-sm mx-auto" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
+                                        <a href="data_barang.php?page=hapus&kode_barang=<?= $data['kode_barang']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm mx-auto"><i class='bx bxs-trash'></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -406,26 +421,51 @@ session_start();
                     @$nama_barang = $_POST['nama_barang'];
                     @$tanggal_dibeli = $_POST['tanggal_dibeli'];
                     @$stok = $_POST['stok'];
+                    @$merk = $_POST['merk'];
+                    @$id_kategori = $_POST['id_kategori'];
                     if(isset($_POST['add'])){
-                        $query2 = $conn->query("insert into barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok'");
-                        if($query2){
+                        $ext = array('png', 'jpg', 'jpeg');
+                        $nama_gambar = $_FILES['gambar']['name'];
+                        $ext_gambar = explode('.', $nama_gambar);
+                        $res_ext = strtolower(end($ext_gambar));
+                        $size = $_FILES['gambar']['size'];
+                        $temp = $_FILES['gambar']['tmp_name'];
+                        if(in_array($res_ext, $ext) === true){
+                            if($size < 1044070){
+                                move_uploaded_file($temp, 'foto_barang/'.$nama_gambar);
+                                $query2 = $conn->query("insert into barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok',merk='$merk',gambar='$nama_gambar',id_kategori='$id_kategori'");
+                                if($query2){
+                                    echo "
+                                    <script language = javascript>
+                                            alert('Data Berhasil Ditambahkan');
+                                            window.location.href='data_barang.php';
+                                    </script>
+                                ";
+                                }
+                            }else{
+                                echo "
+                                <script>
+                                    alert('Ukuran Gambar Terlalu Besar!!');
+                                </script>
+                                ";
+                            }
+                        }else{
                             echo "
-                            <script language = javascript>
-                                    alert('Data Berhasil Ditambahkan');
-                                    window.location.href='data_barang.php';
-                            </script>
-                          ";
+                                <script>
+                                    alert('Ekstensi Gambar Yang Diupload Tidak Dibolehkan!!');
+                                </script>
+                            ";
                         }
                     }
                     ?>
-                    <div class="modal P-0" id="add-data-barang" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
+                    <div class="modal P-0 overflow-auto" id="add-data-barang" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
                         <div class="modal-dialog">
                             <div class="modal-content" style="width:1">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data User</h5>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data Barang</h5>
                                     <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-barang').style.display='none'"></button>
                                 </div>
-                                <form action="" method="post">
+                                <form action="" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="exampleFormControlInput1">Kode Barang</label>
@@ -440,8 +480,28 @@ session_start();
                                             <input type="date" class="form-control"  name="tanggal_dibeli"  require>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Stok</label>
+                                            <label for="exampleFormControlInput1">Stok Barang</label>
                                             <input type="number" name="stok" class="form-control" require>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">Merk Barang</label>
+                                            <input type="text" name="merk" class="form-control" require>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">Kategori Barang</label>
+                                            <select name="id_kategori" id="" class="form-control">
+                                                <option value="">Pilih Kategori</option>
+                                                <?php 
+                                                    $query2 = $conn->query("select * from kategori");
+                                                    while($kategori = $query2->fetch_array()){
+                                                ?>
+                                                    <option value="<?= $kategori['id_kategori']?>"><?= $kategori['nama_kategori'] ?></option>
+                                                <?php }?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">Gambar Barang</label>
+                                            <input type="file" name="gambar" class="form-control" require>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
