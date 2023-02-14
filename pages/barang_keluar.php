@@ -1,6 +1,9 @@
+<?php
+session_start();
+	if(@$_SESSION['level'] == "admin"){
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -295,6 +298,19 @@
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
+                                    $page = @$_GET['page'];
+                                    if($page=='hapus'){
+                                        $id = $_GET['id'];
+                                        $del = $conn->query("delete from keluar where id_keluar='$id'");
+                                        if($del){
+                                            echo "
+                                            <script>
+                                            alert('Hapus Data Berhasil');
+                                            window.location.href='barang_keluar.php';
+                                            </script>
+                                            ";
+                                        }
+                                    };
                                     $query = $conn->query("select * from keluar inner join barang on keluar.kode_barang=barang.kode_barang inner join ruangan on ruangan.id=keluar.id_ruangan");
                                     while($data = $query->fetch_array()){ 
                                 ?>
@@ -318,7 +334,8 @@
                                             <?= $data['jumlah_keluar']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id_keluar']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
+                                        <a href="barang_keluar.php?page=hapus&id=<?= $data['id_keluar']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -335,15 +352,20 @@
                             @$tanggal_keluar = $_POST['tanggal_keluar'];
                             @$jumlah_keluar = $_POST['jumlah_keluar'];
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update keluar set kode_barang='$kode_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar' where id='$id'");
+                                $edit = $conn->query("update keluar set kode_barang='$kode_barang',penerima='$penerima',tanggal_keluar='$tanggal_keluar' where id_keluar='$id'");
                                 if($edit){
-                                    echo 'berhasi;';
+                                   echo "
+                                   <script language = javascript>
+                                        alert('Data Berhasil Diubah');
+                                            window.location.href='barang_keluar.php';
+                                    </script>
+                                   ";
                                 }
                             }
-                            $query = $conn->query("select * from keluar inner join barang on keluar.kode_barang=barang.kode_barang");
+                            $query = $conn->query("select * from keluar inner join barang on keluar.kode_barang=barang.kode_barang inner join ruangan on ruangan.id=keluar.id_ruangan");
                             while($data = $query->fetch_array()){
                         ?>
-                        <div class="modal fade" id="modal-<?= $data['kode_barang']?>">
+                        <div class="modal fade" id="modal-<?= $data['id_keluar']?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -355,13 +377,21 @@
                                     <div class="modal-body">
                                     <form action="" method="post">
                                             <div class="modal-body p-0">
-                                                <input type="hidden" name="id" value="<?= $data['id']?>">
+                                                <input type="hidden" name="id" value="<?= $data['id_keluar']?>">
                                                 <div class="form-group">
                                                     <input type="hidden" class="form-control" value="<?= $data['kode_barang']?>" name="kode_barang">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nama Barang</label>
-                                                    <input type="text" class="form-control" value="<?= $data['nama_barang']?>" name="nama_barang">
+                                                    <select name="kode_barang" id="" class="form-control">
+                                                        <option value="<?= $data['kode_barang'] ?>"><?= $data['nama_barang'] ?></option>
+                                                        <?php 
+                                                            $query2 = $conn->query("select * from barang");
+                                                            while($barang = $query2->fetch_array()){
+                                                        ?>
+                                                        <option value="<?= $barang['kode_barang']?>"><?= $barang['nama_barang'] ?></option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Nama Penerima</label>
@@ -369,10 +399,18 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Tanggal Keluar</label>
-                                                    <select name="tanggal_keluar" id="" class="form-control">
-                                                        <option value="<?= $data['tanggal_keluar'] ?>" selected><?= $data['tanggal_keluar'] ?></option>
-                                                        <option value="admin">Admin</option>
-                                                        <option value="petugas">Petugas</option>
+                                                    <input type="date" name="tanggal_keluar" value="<?= $data['tanggal_keluar']?>" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Nama Ruang</label>
+                                                    <select name="id_ruang" id="" class="form-control">
+                                                        <option value="<?= $data['id'] ?>"><?= $data['nama_ruangan'] ?></option>
+                                                        <?php 
+                                                            $query3 = $conn->query("select * from ruangan");
+                                                            while($ruangan = $query3->fetch_array()){
+                                                        ?>
+                                                        <option value="<?= $ruangan['id']?>"><?= $ruangan['nama_ruangan'] ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -405,6 +443,7 @@
                             $update = $conn->query("update barang set stok='$test' where kode_barang='$kode_barang'");
                             echo "
                             <script language = javascript>
+                                    alert('Data Berhasil Ditambahkan');
                                     window.location.href='barang_keluar.php';
                             </script>
                           ";
@@ -519,3 +558,13 @@
 </body>
 
 </html>
+<?php
+	}else{
+		echo "
+			<script>
+				alert('anda tidak memiliki akses ke halam ini');
+				window.location.href='../login.php';
+			</script>
+		";
+	}
+?>

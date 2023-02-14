@@ -5,11 +5,10 @@
     @$password = $_POST['password'];
     if(isset($_POST['submit'])){
         $query = $conn->query("select * from user where username='$username' and password='$password'");
-        $row = $query->num_rows();
-        if($row > 0 ){
-            $res = $query->fetch_assoc();
-            $_SESSION['username'] = $res['username'];
-            $_SESSION['level'] = $res['level'];
+        $data = $query->fetch_array();
+        if(isset($data['username']) and isset($data['password'])){
+            $_SESSION['username'] = $data['username'];
+            $_SESSION['level'] = $data['level'];
             header("location: dashboard.php");
         }else{
             echo "<script>alert('username atau password Anda salah. Silahkan coba lagi!')</script>";

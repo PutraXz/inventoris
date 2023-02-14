@@ -1,6 +1,9 @@
+<?php
+session_start();
+	if(@$_SESSION['level'] == "admin"){
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -291,6 +294,19 @@
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
+                                    $page = @$_GET['page'];
+                                    if($page=='hapus'){
+                                        $nama_ruang = $_GET['nama_ruang'];
+                                        $del = $conn->query("delete from ruangan where nama_ruangan='$nama_ruang'");
+                                        if($del){
+                                            echo "
+                                            <script>
+                                            alert('Hapus Data Berhasil');
+                                            window.location.href='ruang.php';
+                                            </script>
+                                            ";
+                                        }
+                                    };
                                     $query = $conn->query("select * from ruangan");
                                     while($data = $query->fetch_array()){ 
                                 ?>
@@ -302,7 +318,8 @@
                                             <?= $data['nama_penanggung']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
+                                        <a href="ruang.php?page=hapus&nama_ruang=<?= $data['nama_ruangan']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -318,7 +335,12 @@
                             if(isset($_POST['edit'])){
                                 $edit = $conn->query("update ruangan set nama_ruangan='$nama_ruangan',nama_penanggung='$nama_penanggung' where id='$id'");
                                 if($edit){
-                                    echo 'berhasi;';
+                                    echo "
+                                        <script>
+                                        alert('Data Berhasil Diubah');
+                                        window.location.href='ruang.php';
+                                        </script>
+                                    ";
                                 }
                             }
                             $query = $conn->query("select * from ruangan");
@@ -368,6 +390,7 @@
                         if($query2){
                             echo "
                             <script language = javascript>
+                                alert('Data Berhasil Ditambahkan');
                                     window.location.href='ruangan.php';
                             </script>
                           ";
@@ -456,3 +479,13 @@
 </body>
 
 </html>
+<?php
+	}else{
+		echo "
+			<script>
+				alert('anda tidak memiliki akses ke halam ini');
+				window.location.href='../login.php';
+			</script>
+		";
+	}
+?>

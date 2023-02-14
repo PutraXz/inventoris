@@ -1,3 +1,7 @@
+<?php
+session_start();
+	if(@$_SESSION['level'] == "admin"){
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -315,3 +319,13 @@
 <script src="dist/js/pages/dashboard2.js"></script>
 </body>
 </html>
+<?php
+	}else{
+		echo "
+			<script>
+				alert('anda tidak memiliki akses ke halam ini');
+				window.location.href='login.php';
+			</script>
+		";
+	}
+?>

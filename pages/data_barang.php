@@ -1,3 +1,7 @@
+<?php
+session_start();
+	if(@$_SESSION['level'] == "admin"){
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -293,6 +297,19 @@
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
+                                    $page = @$_GET['page'];
+                                    if($page=='hapus'){
+                                        $kode_barang = $_GET['kode_barang'];
+                                        $del = $conn->query("delete from barang where kode_barang='$kode_barang'");
+                                        if($del){
+                                            echo "
+                                            <script>
+                                            alert('Hapus Data Berhasil');
+                                            window.location.href='data_barang.php';
+                                            </script>
+                                            ";
+                                        }
+                                    };
                                     $query = $conn->query("select * from barang ");
                                     while($data = $query->fetch_array()){ 
                                 ?>
@@ -310,7 +327,8 @@
                                             <?= $data['stok']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
+                                        <a href="data_barang.php?page=hapus&kode_barang=<?= $data['kode_barang']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -328,7 +346,12 @@
                             if(isset($_POST['edit'])){
                                 $edit = $conn->query("update barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok' where kode_barang='$kode'");
                                 if($edit){
-                                    echo 'berhasi;';
+                                    echo "
+                                    <script language = javascript>
+                                        alert('Data Berhasil Diubah');
+                                            window.location.href='data_barang.php';
+                                    </script>
+                                    ";
                                 }
                             }
                             $query = $conn->query("select * from barang");
@@ -388,6 +411,7 @@
                         if($query2){
                             echo "
                             <script language = javascript>
+                                    alert('Data Berhasil Ditambahkan');
                                     window.location.href='data_barang.php';
                             </script>
                           ";
@@ -484,3 +508,13 @@
 </body>
 
 </html>
+<?php
+	}else{
+		echo "
+			<script>
+				alert('anda tidak memiliki akses ke halam ini');
+				window.location.href='../login.php';
+			</script>
+		";
+	}
+?>

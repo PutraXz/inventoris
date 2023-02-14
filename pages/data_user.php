@@ -1,3 +1,7 @@
+<?php
+session_start();
+	if(@$_SESSION['level'] == "admin"){
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -293,6 +297,19 @@
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
+                                    $page = @$_GET['page'];
+                                    if($page=='hapus'){
+                                        $id = $_GET['id'];
+                                        $del = $conn->query("delete from user where id='$id'");
+                                        if($del){
+                                            echo "
+                                            <script>
+                                            alert('Hapus Data Berhasil');
+                                            window.location.href='data_user.php';
+                                            </script>
+                                            ";
+                                        }
+                                    };
                                     $query = $conn->query("select * from user");
                                     while($data = $query->fetch_array()){ 
                                 ?>
@@ -310,7 +327,8 @@
                                             <?= $data['level']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
+                                        <a href="data_user.php?page=hapus&id=<?= $data['id']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -328,7 +346,12 @@
                             if(isset($_POST['edit'])){
                                 $edit = $conn->query("update user set username='$username',password='$password',nama_user='$nama_user',level='$level' where id='$id'");
                                 if($edit){
-                                    echo 'berhasi;';
+                                   echo "
+                                   <script language = javascript>
+                                        alert('Data Berhasil Diubah');
+                                            window.location.href='ruangan.php';
+                                    </script>
+                                   ";
                                 }
                             }
                             $query = $conn->query("select * from user");
@@ -392,6 +415,7 @@
                         if($query2){
                             echo "
                             <script language = javascript>
+                                alert('Data Berhasil Ditambahkan');
                                     window.location.href='data_user.php';
                             </script>
                           ";
@@ -491,3 +515,13 @@
 </body>
 
 </html>
+<?php
+	}else{
+		echo "
+			<script>
+				alert('anda tidak memiliki akses ke halam ini');
+				window.location.href='../login.php';
+			</script>
+		";
+	}
+?>
