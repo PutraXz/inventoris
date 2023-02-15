@@ -245,7 +245,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="kategori_keluar.php" class="nav-link">
+                            <a href="barang_keluar.php" class="nav-link">
                             <i class="nav-icon bx bx-exit" style="top: 7px;position: relative;font-size:25px"></i>
                             <p>
                                 Pengluaran kategori
@@ -392,7 +392,7 @@ session_start();
                             <script language = javascript>
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Your work has been saved',
+                                title: 'Data Berhasil Ditambahkan',
                                 showConfirmButton: false,
                             });
                           </script>

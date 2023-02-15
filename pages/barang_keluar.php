@@ -542,18 +542,7 @@ session_start();
     <script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="../plugins/jszip/jszip.min.js"></script>
-    <script src="../plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="../plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="../dist/js/adminlte.min.js"></script>
-        <!-- SweetAlert2 -->
-    <script src="../plugins/sweetalert2/sweetalert2.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../dist/js/demo.js"></script>
-
     <script>
         $(function() {
             $("#example1").DataTable({

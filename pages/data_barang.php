@@ -10,8 +10,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | Widgets</title>
 
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -301,6 +300,7 @@ session_start();
                                     <th>Stok</th>
                                     <th>Gambar</th>
                                     <th>Merk</th>
+                                    <th>Kategori</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -310,17 +310,26 @@ session_start();
                                     $page = @$_GET['page'];
                                     if($page=='hapus'){
                                         $kode_barang = $_GET['kode_barang'];
+                                        $query = $conn->query("select * from barang where kode_barang='$kode_barang'");
+                                        $data = $query->fetch_array();
+
                                         $del = $conn->query("delete from barang where kode_barang='$kode_barang'");
                                         if($del){
+                                            if(file_exists('foto_barang/'.$data['gambar'])){
+                                                unlink('foto_barang/'.$data['gambar']);
+                                            }
                                             echo "
                                             <script>
-                                            alert('Hapus Data Berhasil');
-                                            window.location.href='data_barang.php';
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Data Berhasil Dihapus',
+                                                showConfirmButton: false,
+                                            });
                                             </script>
                                             ";
                                         }
                                     };
-                                    $query = $conn->query("select * from barang ");
+                                    $query = $conn->query("select * from barang inner join kategori on kategori.id_kategori=barang.id_kategori");
                                     while($data = $query->fetch_array()){ 
                                 ?>
                                     <tr>
@@ -342,6 +351,9 @@ session_start();
                                             <?= $data['merk']?>
                                         </td>
                                         <td>
+                                            <?= $data['nama_kategori']?>
+                                        </td>
+                                        <td>
                                         <button type="button" class="btn btn-primary btn-sm mx-auto" data-toggle="modal" data-target="#modal-<?= $data['kode_barang']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
                                         <a href="data_barang.php?page=hapus&kode_barang=<?= $data['kode_barang']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm mx-auto"><i class='bx bxs-trash'></i></a>
                                         </td>
@@ -358,8 +370,11 @@ session_start();
                             @$nama_barang = $_POST['nama_barang'];
                             @$tanggal_dibeli = $_POST['tanggal_dibeli'];
                             @$stok = $_POST['stok'];
+                            @$merk = $_POST['merk'];
+                            @$id_kategori = $_POST['id_kategori'];
+
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok' where kode_barang='$kode'");
+                                $edit = $conn->query("update barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok',merk='$merk',id_kategori='$id_kategori' where kode_barang='$kode'");
                                 if($edit){
                                     echo "
                                     <script language = javascript>
@@ -369,7 +384,7 @@ session_start();
                                     ";
                                 }
                             }
-                            $query = $conn->query("select * from barang");
+                            $query = $conn->query("select * from barang inner join kategori on kategori.id_kategori=barang.id_kategori");
                             while($data = $query->fetch_array()){
                         ?>
                         <div class="modal fade" id="modal-<?= $data['kode_barang']?>">
@@ -400,6 +415,22 @@ session_start();
                                                 <div class="form-group">
                                                     <label for="exampleFormControlInput1">Stok</label>
                                                     <input type="number" name="stok" class="form-control" require value="<?= $data['stok']?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Merk</label>
+                                                    <input type="text" name="merk" class="form-control" require value="<?= $data['merk']?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Kategori</label>
+                                                    <select name="id_kategori" id="" class="form-control">
+                                                        <option value="<?= $data['id_kategori']?>"><?= $data['nama_kategori']?></option>
+                                                        <?php
+                                                            $q_kategori = $conn->query("select * from kategori");
+                                                            while($kategori = $q_kategori->fetch_array()){
+                                                        ?>
+                                                        <option value="<?= $kategori['id_kategori']?>"><?= $kategori['nama_kategori']?></option>
+                                                        <?php }?>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -437,8 +468,11 @@ session_start();
                                 if($query2){
                                     echo "
                                     <script language = javascript>
-                                            alert('Data Berhasil Ditambahkan');
-                                            window.location.href='data_barang.php';
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Data Berhasil Ditambahkan',
+                                        showConfirmButton: false,
+                                    });
                                     </script>
                                 ";
                                 }
@@ -551,10 +585,6 @@ session_start();
     <script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="../dist/js/adminlte.min.js"></script>
-        <!-- SweetAlert2 -->
-    <script src="../plugins/sweetalert2/sweetalert2.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../dist/js/demo.js"></script>
 
     <script>
         $(function() {
