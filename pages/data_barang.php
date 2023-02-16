@@ -220,7 +220,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="ruang.php" class="nav-link">
+                            <a href="data_ruangan.php" class="nav-link">
                             <i class="nav-icon bx bx-home-alt-2" style="top: 2px;position: relative;font-size:25px"></i>
                             <p>
                                 Ruangan
@@ -365,24 +365,55 @@ session_start();
                     <!-- /.card-body -->
                     <!-- modal edit user -->
                         <?php
-                            @$kode = $_POST['kode'];
-                            @$kode_barang = $_POST['kode_barang'];
-                            @$nama_barang = $_POST['nama_barang'];
-                            @$tanggal_dibeli = $_POST['tanggal_dibeli'];
-                            @$stok = $_POST['stok'];
-                            @$merk = $_POST['merk'];
-                            @$id_kategori = $_POST['id_kategori'];
-
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok',merk='$merk',id_kategori='$id_kategori' where kode_barang='$kode'");
-                                if($edit){
+                                @$kode = $_POST['kode'];
+                                @$kode_barang = $_POST['kode_barang'];
+                                @$nama_barang = $_POST['nama_barang'];
+                                @$tanggal_dibeli = $_POST['tanggal_dibeli'];
+                                @$stok = $_POST['stok'];
+                                @$merk = $_POST['merk'];
+                                @$id_kategori = $_POST['id_kategori'];
+                                $ext = array('png', 'jpg', 'jpeg');
+                                $nama_gambar = $_FILES['gambar']['name'];
+                                $ext_gambar = explode('.', $nama_gambar);
+                                $res_ext = strtolower(end($ext_gambar));
+                                $size = $_FILES['gambar']['size'];
+                                $temp = $_FILES['gambar']['tmp_name'];
+                                $get = $conn->query("select * from barang where kode_barang='$kode_barang'");
+                                $barang = $get->fetch_array();
+                                if(in_array($res_ext, $ext) === true){
+                                    if($size < 1044070){
+                                        if(is_file("foto_barang/".$barang['gambar'])){
+                                            unlink("foto_barang/".$barang['gambar']);
+                                        }
+                                            move_uploaded_file($temp, 'foto_barang/'.$nama_gambar);
+                                            $edit = $conn->query("update barang set kode_barang='$kode_barang',nama_barang='$nama_barang',tanggal_dibeli='$tanggal_dibeli',stok='$stok',merk='$merk',id_kategori='$id_kategori',gambar='$nama_gambar' where kode_barang='$kode'");
+                                            if($edit){
+                                                echo "
+                                                    <script>
+                                                        alert('Data Berhasil Diedit');
+                                                        window.location.href='data_barang.php';
+                                                    </script>
+                                                ";
+                                            }  
+                                                
+                                        
+                                            
+                                    }else{
+                                        echo "
+                                        <script>
+                                            alert('Ukuran Gambar Terlalu Besar!!');
+                                        </script>
+                                        ";
+                                    }
+                                }else{
                                     echo "
-                                    <script language = javascript>
-                                        alert('Data Berhasil Diubah');
-                                            window.location.href='data_barang.php';
-                                    </script>
+                                        <script>
+                                            alert('Ekstensi Gambar Yang Diupload Tidak Dibolehkan!!');
+                                        </script>
                                     ";
                                 }
+                                
                             }
                             $query = $conn->query("select * from barang inner join kategori on kategori.id_kategori=barang.id_kategori");
                             while($data = $query->fetch_array()){
@@ -397,7 +428,7 @@ session_start();
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                    <form action="" method="post">
+                                    <form action="" method="post" enctype="multipart/form-data">
                                             <div class="modal-body p-0">
                                                 <input type="hidden" name="kode" value="<?= $data['kode_barang']?>">
                                                 <div class="form-group">
@@ -431,6 +462,10 @@ session_start();
                                                         <option value="<?= $kategori['id_kategori']?>"><?= $kategori['nama_kategori']?></option>
                                                         <?php }?>
                                                     </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Gambar Barang</label>
+                                                    <input type="file" name="gambar" class="form-control" require>
                                                 </div>
                                             </div>
                                         </div>
@@ -468,10 +503,8 @@ session_start();
                                 if($query2){
                                     echo "
                                     <script language = javascript>
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Data Berhasil Ditambahkan',
-                                        showConfirmButton: false,
+                                        alert('Data Berhasil Ditambahkan');
+                                        window.location.href='data_barang.php';
                                     });
                                     </script>
                                 ";
@@ -578,12 +611,6 @@ session_start();
     <script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="../plugins/jszip/jszip.min.js"></script>
-    <script src="../plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="../plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="../dist/js/adminlte.min.js"></script>
 
     <script>

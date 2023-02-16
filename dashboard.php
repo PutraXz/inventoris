@@ -220,7 +220,7 @@ session_start();
             </a>
           </li>
           <li class="nav-item">
-              <a href="pages/ruang.php" class="nav-link">
+              <a href="pages/data_ruangan.php" class="nav-link">
               <i class="nav-icon bx bx-home-alt-2" style="top: 2px;position: relative;font-size:25px"></i>
               <p>
                   Ruangan

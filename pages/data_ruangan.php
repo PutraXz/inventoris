@@ -4,14 +4,13 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | Widgets</title>
 
     <!-- bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -221,7 +220,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_ruangan.php" class="nav-link">
+                            <a href="data_ruangan.php" class="nav-link  active">
                             <i class="nav-icon bx bx-home-alt-2" style="top: 2px;position: relative;font-size:25px"></i>
                             <p>
                                 Ruangan
@@ -229,7 +228,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_kategori.php" class="nav-link active">
+                            <a href="data_kategori.php" class="nav-link">
                             <i class="nav-icon bx bx-category" style="top: 2px;position: relative;font-size:25px"></i>
                             <p>
                                 Kategori
@@ -248,7 +247,7 @@ session_start();
                             <a href="barang_keluar.php" class="nav-link">
                             <i class="nav-icon bx bx-exit" style="top: 7px;position: relative;font-size:25px"></i>
                             <p>
-                                Pengluaran kategori
+                                Pengluaran Barang
                             </p>
                             </a>
                         </li>
@@ -291,11 +290,12 @@ session_start();
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary" onclick="document.getElementById('add-data-kategori').style.display='block'">Add Data Kategori</a>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-data-ruang').style.display='block'">Add Data Ruangan</button>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nama Kategori</th>
+                                    <th>Nama Ruangan</th>
+                                    <th>Nama Penanggung</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -304,28 +304,30 @@ session_start();
                                     include '../koneksi.php';
                                     $page = @$_GET['page'];
                                     if($page=='hapus'){
-                                        $id = $_GET['id'];
-                                        $del = $conn->query("delete from kategori where id_kategori='$id'");
+                                        $nama_ruang = $_GET['nama_ruang'];
+                                        $del = $conn->query("delete from ruangan where nama_ruangan='$nama_ruang'");
                                         if($del){
                                             echo "
                                             <script>
-                                            
                                             alert('Hapus Data Berhasil');
-                                            window.location.href='data_kategori.php';
+                                            window.location.href='data_ruangan.php';
                                             </script>
                                             ";
                                         }
                                     };
-                                    $query = $conn->query("select * from kategori ");
+                                    $query = $conn->query("select * from ruangan");
                                     while($data = $query->fetch_array()){ 
                                 ?>
                                     <tr>
                                         <td>
-                                            <?= $data['nama_kategori']?>
+                                            <?= $data['nama_ruangan']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id_kategori']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
-                                        <a href="data_kategori.php?page=hapus&id=<?= $data['id_kategori']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
+                                            <?= $data['nama_penanggung']?>
+                                        </td>
+                                        <td>
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id']?>"  style="width:30px"><i class='bx bxs-edit'></i></button>
+                                        <a href="ruang.php?page=hapus&nama_ruang=<?= $data['nama_ruangan']?>" onclick="return confirm('apakah anda yakin ingin menghapus data ini?');" class="btn btn-primary btn-sm"><i class='bx bxs-trash'></i></a>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -335,27 +337,28 @@ session_start();
                     <!-- /.card-body -->
                     <!-- modal edit user -->
                         <?php
-                            @$id_kategori = $_POST['id_kategori'];
-                            @$nama_kategori = $_POST['nama_kategori'];
+                            @$id = $_POST['id'];   
+                            @$nama_ruangan = $_POST['nama_ruangan'];
+                            @$nama_penanggung = $_POST['nama_penanggung'];
                             if(isset($_POST['edit'])){
-                                $edit = $conn->query("update kategori set nama_kategori='$nama_kategori' where id_kategori='$id_kategori'");
+                                $edit = $conn->query("update ruangan set nama_ruangan='$nama_ruangan',nama_penanggung='$nama_penanggung' where id='$id'");
                                 if($edit){
                                     echo "
-                                    <script language = javascript>
+                                        <script>
                                         alert('Data Berhasil Diubah');
-                                            window.location.href='data_kategori.php';
-                                    </script>
+                                        window.location.href='data_ruangan.php';
+                                        </script>
                                     ";
                                 }
                             }
-                            $query = $conn->query("select * from kategori");
+                            $query = $conn->query("select * from ruangan");
                             while($data = $query->fetch_array()){
                         ?>
-                        <div class="modal fade" id="modal-<?= $data['id_kategori']?>">
+                        <div class="modal fade" id="modal-<?= $data['id']?>">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Data kategori</h4>
+                                        <h4 class="modal-title">Edit Data Ruangan</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -363,10 +366,14 @@ session_start();
                                     <div class="modal-body">
                                     <form action="" method="post">
                                             <div class="modal-body p-0">
-                                                <input type="hidden" name="id_kategori" value="<?= $data['id_kategori']?>">
+                                                <input type="hidden" name="id" value="<?= $data['id']?>">
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Nama kategori</label>
-                                                    <input type="text" class="form-control" name="nama_kategori"  require value="<?= $data['nama_kategori']?>">
+                                                    <label for="exampleFormControlInput1">Nama Ruangan</label>
+                                                    <input type="text" class="form-control" value="<?= $data['nama_ruangan']?>" name="nama_ruangan">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Nama Penanggung</label>
+                                                    <input type="text" class="form-control" value="<?= $data['nama_penanggung']?>" name="nama_penanggung">
                                                 </div>
                                             </div>
                                         </div>
@@ -384,34 +391,40 @@ session_start();
                     <!-- /modal edit user -->
                     <!-- modal add user -->
                     <?php
-                    @$nama_kategori = $_POST['nama_kategori'];
+                    @$nama_ruangan = $_POST['nama_ruangan'];
+                    @$nama_penanggung = $_POST['nama_penanggung'];
                     if(isset($_POST['add'])){
-                        $add = $conn->query("insert into kategori set nama_kategori='$nama_kategori'");
-                        if($add){
+                        $query2 = $conn->query("insert into ruangan set nama_ruangan='$nama_ruangan',nama_penanggung='$nama_penanggung'");
+                        if($query2){
                             echo "
                             <script language = javascript>
-                            alert('Data Berhasil Ditambahkan');
-                             window.location.href='data_kategori.php';
-                          </script>
-                            ";
+                                alert('Data Berhasil Ditambahkan');
+                                    window.location.href='data_ruangan.php';
+                            </script>
+                          ";
                         }
                     }
                     ?>
-                    <div class="modal P-0" id="add-data-kategori" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
+                    <div class="modal P-0" id="add-data-ruang" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
                         <div class="modal-dialog">
                             <div class="modal-content" style="width:1">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data Kategori</h5>
-                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-kategori').style.display='none'"></button>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data Ruangan</h5>
+                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-ruang').style.display='none'"></button>
                                 </div>
                                 <form action="" method="post">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Nama kategori</label>
-                                            <input type="text" class="form-control" name="nama_kategori"  require>
+                                            <label for="exampleFormControlInput1">Nama Ruangan</label>
+                                            <input type="text" class="form-control" name="nama_ruangan" require>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">Nama Penanggung</label>
+                                            <input type="text" class="form-control" name="nama_penanggung"  require>
+                                        </div>
+                                    </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-kategori').style.display='none'">Close</button>
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-ruang').style.display='none'">Close</button>
                                         <button type="submit" class="btn btn-primary" name="add">Add Data</button>
                                     </div>
                                 </form>
@@ -439,7 +452,6 @@ session_start();
             </div>
         </footer>
     </div>
-    <!-- jangan lupa untuk menambahkan unset agar sweet alert tidak muncul lagi saat di refresh -->
     <!-- jQuery -->
     <script src="../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->

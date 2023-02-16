@@ -9,9 +9,6 @@ session_start();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | Widgets</title>
-
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -221,7 +218,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="ruang.php" class="nav-link">
+                            <a href="data_ruangan.php" class="nav-link">
                             <i class="nav-icon bx bx-home-alt-2" style="top: 2px;position: relative;font-size:25px"></i>
                             <p>
                                 Ruangan
@@ -357,7 +354,7 @@ session_start();
                                    echo "
                                    <script language = javascript>
                                         alert('Data Berhasil Diubah');
-                                            window.location.href='ruangan.php';
+                                            window.location.href='data_user.php';
                                     </script>
                                    ";
                                 }
@@ -499,17 +496,7 @@ session_start();
     <script src="../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="../plugins/jszip/jszip.min.js"></script>
-    <script src="../plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="../plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="../dist/js/adminlte.min.js"></script>
-        <!-- SweetAlert2 -->
-    <script src="../plugins/sweetalert2/sweetalert2.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../dist/js/demo.js"></script>
 
     <script>
         $(function() {
